@@ -1,3 +1,5 @@
 *.hgt
 *.csv
 *.gpx
+.srtmcache
+.DS_Store
