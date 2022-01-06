@@ -90,7 +90,7 @@ def create_gpx_from_gyroscope_segments(segments):
       gpx_segment.points.append(gpxpt)
 
   _LOGGER_.debug('Adding elevation data...')
-  elevation_data = srtm.get_data(local_cache_dir=".")
+  elevation_data = srtm.get_data(local_cache_dir=".srtmcache")
   elevation_data.add_elevations(gpxout)
 
   _LOGGER_.debug("Done creating GPX.")
@@ -109,12 +109,18 @@ def main():
     day_format = day.strftime("%Y%m%d")
     basename = "{}_gyroscope.gpx".format(day_format)
     filename = os.path.join(args.outputdir,basename)
-    gpx = create_gpx_from_gyroscope_segments(grouped_data[day])
-    gpx.name = "Gyroscope path: {}".format(day_format)
+    if os.path.isfile(filename):
+      _LOGGER_.info('{} already exists, skipping.'.format(filename))
+    else:
+      try:
+        gpx = create_gpx_from_gyroscope_segments(grouped_data[day])
+        gpx.name = "Gyroscope path: {}".format(day_format)
 
-    _LOGGER_.info("Writing {}...".format(filename))
-    with open(filename,'w') as gpxfile:
-      gpxfile.write(gpx.to_xml())
+        _LOGGER_.info("Writing {}...".format(filename))
+        with open(filename,'w') as gpxfile:
+          gpxfile.write(gpx.to_xml())
+      except:
+        _LOGGER_.exception('failed to write {}'.format(filename))
     
 
 if __name__ == "__main__":
