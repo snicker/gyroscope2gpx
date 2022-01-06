@@ -27,7 +27,7 @@ def parse_args():
   parser.add_argument('-o','--outputdir',
       type=dir_path,
       default="./gyroscope2gpx_output/",
-      help="directory to output GPX files (automatically created)")
+      help="(optional) directory to output GPX files, defaults to ./gyroscope2gpx_output")
   parser.add_argument('--debug', action="store_true")
   return parser.parse_args()
 
